@@ -4,57 +4,6 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Layout from "../components/Layout"
 
-const WebsiteStatus = ({ url }) => {
-  const [status, setStatus] = useState('checking')
-
-  useEffect(() => {
-    const checkWebsite = async () => {
-      try {
-        const controller = new AbortController()
-        const timeoutId = setTimeout(() => controller.abort(), 5000)
-
-        const response = await fetch(url, {
-          method: 'HEAD',
-          signal: controller.signal,
-          mode: 'no-cors'
-        })
-
-        clearTimeout(timeoutId)
-        setStatus('online')
-      } catch (error) {
-        setStatus('offline')
-      }
-    }
-
-    if (url && url !== '#') {
-      checkWebsite()
-    } else {
-      setStatus('unavailable')
-    }
-  }, [url])
-
-  const statusColors = {
-    'checking': 'bg-yellow-500',
-    'online': 'bg-green-500',
-    'offline': 'bg-red-500',
-    'unavailable': 'bg-gray-500'
-  }
-
-  const statusLabels = {
-    'checking': 'Checking...',
-    'online': 'Online',
-    'offline': 'Offline',
-    'unavailable': 'N/A'
-  }
-
-  return (
-    <span 
-      className={`inline-flex items-center ${statusColors[status]} text-white px-2 py-1 rounded text-xs ml-2`}
-    >
-      {statusLabels[status]}
-    </span>
-  )
-}
 
 const projects = [
   {
@@ -227,7 +176,6 @@ export default function Projects() {
                       className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded flex items-center"
                     >
                       Go to Website
-                      <WebsiteStatus url={selectedProject.website} />
                     </a>
                     <a
                       href={selectedProject.github}
