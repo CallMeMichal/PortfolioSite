@@ -21,28 +21,37 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  // Dodaj tę opcję dla statycznego eksportu, co może pomóc z deploymentem
+  output: 'export',
 }
 
-mergeConfig(nextConfig, userConfig)
-
-function mergeConfig(nextConfig, userConfig) {
+// Popraw funkcję mergeConfig, aby zwracała zmodyfikowany obiekt
+function mergeConfig(config, userConfig) {
   if (!userConfig) {
-    return
+    return config;
   }
 
+  const mergedConfig = { ...config };
+  
   for (const key in userConfig) {
     if (
-      typeof nextConfig[key] === 'object' &&
-      !Array.isArray(nextConfig[key])
+      typeof mergedConfig[key] === 'object' &&
+      !Array.isArray(mergedConfig[key])
     ) {
-      nextConfig[key] = {
-        ...nextConfig[key],
+      mergedConfig[key] = {
+        ...mergedConfig[key],
         ...userConfig[key],
       }
     } else {
-      nextConfig[key] = userConfig[key]
+      mergedConfig[key] = userConfig[key]
     }
   }
+  
+  return mergedConfig;
 }
 
-export default nextConfig
+// Przypisz wynik funkcji mergeConfig do finalConfig
+const finalConfig = mergeConfig(nextConfig, userConfig);
+
+// Eksportuj finalną konfigurację
+export default finalConfig;
